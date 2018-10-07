@@ -17,7 +17,7 @@ var nodo = require("./rutas/nodos");
 
 //importacion de rutas
 app.get("/",function(req,res){
-	
+	res.json("Hola bby");
 });
 
 app.use("/apps",apps);
