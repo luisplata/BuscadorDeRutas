@@ -4,27 +4,10 @@ var app = express();
 var entorno = require('./utilitys/config-modules.js').config();
 var mysql = require("./utilitys/conexion");
 var logger = require("./utilitys/logs").logger;
+var cors = require('cors');
 
 //middleware para una api publica
-// Add headers
-app.use(function (req, res, next) {
-
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', entorno.url_base+":"+entorno.puerto);
-
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
-    next();
-});
+app.use(cors());
 
 //configuracion
 app.use(bodyParser.json());
