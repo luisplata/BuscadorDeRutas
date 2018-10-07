@@ -1,5 +1,6 @@
 var jwt = require('jsonwebtoken');
-var entorno = require('../model/config-modules.js').config();
+var entorno = require('./config-modules.js').config();
+var logger = require("./logs").log();
 
 //modelo para validar
 
@@ -11,7 +12,10 @@ var crearToken = function (username){
 	var token = jwt.sign(tokenData, entorno.secret, {
 		expiresIn: 60 * 60 * entorno.lifeToken // expires in 24 hours
 	});
-
+	logger.info({
+			"token":token,
+			"metodo":"creando token"
+		});
 	return token;
 }
 
@@ -44,13 +48,22 @@ var validandoAutenticacion = function (token){
 var isValid = function(req){
 	var token = req.headers['authorization'];
 	return new Promise(function (fulfill, reject){
+		logger.info({
+			"token":token,
+			"metodo":"isValid"
+		});
 	    if(validandoAutenticacion(token)){
+	    	logger.info({
+				"token":token,
+				"metodo":"isValid=true"
+			});
 	    	fulfill(token);
 	    }else{
-	    	reject(function(res){
-	    		res.status(401);
-	    		res.json("Token no valido");
-	    	});
+	    	logger.info({
+				"token":token,
+				"metodo":"isValid=false"
+			});
+	    	reject(token);
 	    }
 	});
 }
@@ -60,4 +73,4 @@ var Validacion={
 	crearToken:crearToken
 };
 
-module.exports.Validacion = Validacion;
+module.exports = Validacion;
