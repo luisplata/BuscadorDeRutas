@@ -7,7 +7,7 @@ var logger = require("./utilitys/logs").logger;
 var cors = require('cors');
 
 //middleware para una api publica
-app.use(cors());
+app.use(cors({origin: '*'}));
 
 //configuracion
 app.use(bodyParser.json());
