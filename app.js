@@ -7,11 +7,7 @@ var logger = require("./utilitys/logs").logger;
 var cors = require('cors');
 
 //middleware para una api publica
-app.all('/', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
-});
+app.use(cors({origin: '*'}));
 
 //configuracion
 app.use(bodyParser.json());
