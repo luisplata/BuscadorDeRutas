@@ -1,5 +1,6 @@
 var mysql = require("../utilitys/conexion");
 var moment = require('moment')();
+var NodeNode = require("./NodeNode");
 module.exports = function(){
 	this.id;
 	this.nombre;
@@ -51,24 +52,45 @@ module.exports = function(){
 		);
 	}
 	this.asignarNodoAnterior = function(callback,res){
+		var principal = this.id;
+		var siguiente = this.nodo_anterior;
+
 		mysql.insertar("update nodos set nodo_anterior = ? where id = ?",
 			[this.nodo_anterior, this.id],
 			function(error, results, fields){
 				if (error) return res.status(503).json(error);
 				this.id = results.insertId;
-				callback(this.id);
+				var idDelInsertado = this.id;
+				//creamos la cosa para la relacion demuchos a muchos
+				var nodoPorNodo = new NodeNode(principal, [siguiente]);
+				nodoPorNodo.save(function(){
+					callback(idDelInsertado);
+				},function(error){
+					return res.status(503).json(error);
+				});
+				//hasta aqui
 			}
 		);
 	}
 	this.asignarNodoSiguiente = function(callback,res){
+		var principal = this.id;
+		var siguiente = this.nodo_siguiente;
 		mysql.insertar("update nodos set nodo_siguiente = ? where id = ?",
 			[this.nodo_siguiente, this.id],
 			function(error, results, fields){
 				if (error) return res.status(503).json(error);
 				this.id = results.insertId;
-				callback(this.id);
+				var idDelInsertado = this.id;
+				//creamos la cosa para la relacion demuchos a muchos
+				var nodoPorNodo = new NodeNode(principal, [siguiente]);
+				nodoPorNodo.save(function(){
+					callback(idDelInsertado);
+				},function(error){
+					return res.status(503).json(error);
+				});
+				//hasta aqui
 			}
 		);
 	}
 
-}	
+}
